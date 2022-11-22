@@ -5,6 +5,7 @@ services:
     ports:
       - 3000:3000
     working_dir: /app-frontend
+    command: npm start
     depends_on:
       backend:
         condition: service_healthy
@@ -20,7 +21,7 @@ services:
     ports:
       - 3001:3001
     working_dir: /app-backend
-    command: dev
+    command: npm run dev
     volumes: 
       - ./backend/src:/app-backend/src
     depends_on:
