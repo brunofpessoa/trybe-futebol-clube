@@ -7,21 +7,24 @@ export default class LoginService {
   static async login(body: ILogin): Promise<IToken | undefined> {
     const { email, password } = body;
 
-    const data = await Users.findOne({ where: { email } });
-    const user = data?.dataValues;
+    const user = await Users.findOne({ where: { email } });
 
     if (!user) {
       return;
     }
-    const { password: userPassword } = user;
-    const passwordMatches = await isPasswordCompatible(password, userPassword);
-
+    const passwordMatches = await isPasswordCompatible(password, user.password);
     if (!passwordMatches) {
       return;
     }
 
-    const { password: _, ...userWithoutPassword } = user;
-    const token = createToken(userWithoutPassword);
+    const tokenBody = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      email: user.email,
+    };
+
+    const token = createToken(tokenBody);
     return { token };
   }
 }
