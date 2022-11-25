@@ -4,6 +4,10 @@ import httpStatus from '../helpers/httpStatus';
 
 export default class LoginController {
   static async login(req: Request, res: Response) {
+    if (!req.body.email || !req.body.password) {
+      return res.status(httpStatus.badRequest).json({ message: 'All fields must be filled' });
+    }
+
     const data = await LoginService.login(req.body);
 
     const token = data?.token;

@@ -9,9 +9,8 @@ export default class LoginService {
 
     const user = await Users.findOne({ where: { email } });
 
-    if (!user) {
-      return;
-    }
+    if (!user) return;
+
     const passwordMatches = await isPasswordCompatible(password, user.password);
     if (!passwordMatches) {
       return;

@@ -23,12 +23,11 @@ const validateToken = (token: string) => {
   }
 };
 
-const decodeJwt = (token: string) => JSON.parse(
-  Buffer.from(token.split('.')[1], 'base64').toString('ascii'),
-);
+// const decodeJwt = (token: string) => JSON.parse(
+//   Buffer.from(token.split('.')[1], 'base64').toString('ascii'),
+// );
 
 export {
   createToken,
   validateToken,
-  decodeJwt,
 };
