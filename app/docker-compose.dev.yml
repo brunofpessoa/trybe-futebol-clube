@@ -5,7 +5,6 @@ services:
     ports:
       - 3000:3000
     working_dir: /app-frontend
-    command: npm start
     depends_on:
       backend:
         condition: service_healthy
