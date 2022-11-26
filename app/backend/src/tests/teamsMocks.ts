@@ -8,3 +8,8 @@ export const allTeamsMock = [
     "teamName": "Bahia"
   }
 ];
+
+export const teamMock = {
+  "id": 1,
+  "teamName": "Avaí/Kindermann"
+};
