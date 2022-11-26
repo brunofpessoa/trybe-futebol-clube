@@ -8,4 +8,11 @@ export default class TeamsController {
 
     res.status(httpStatus.success).json(data);
   }
+
+  static async getOne(req: Request, res: Response) {
+    const { id } = req.params;
+    const team = await TeamsService.getOne(id);
+
+    res.status(httpStatus.success).json(team);
+  }
 }

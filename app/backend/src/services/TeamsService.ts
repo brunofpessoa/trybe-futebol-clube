@@ -6,4 +6,10 @@ export default class LoginService {
 
     return teams;
   }
+
+  static async getOne(id: string) {
+    const team = await Teams.findOne({ where: { id } });
+
+    return team;
+  }
 }
