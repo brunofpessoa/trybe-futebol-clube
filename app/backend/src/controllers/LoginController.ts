@@ -17,4 +17,20 @@ export default class LoginController {
     }
     res.status(httpStatus.unauthorized).json({ message: 'Incorrect email or password' });
   }
+
+  static async validate(req: Request, res: Response) {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+      return res.status(httpStatus.unauthorized).json({ message: 'Invalid token' });
+    }
+
+    const data = await LoginService.validate(authorization);
+
+    if (!data.role) {
+      return res.status(httpStatus.unauthorized).json({ message: 'Invalid token' });
+    }
+
+    res.status(httpStatus.success).json({ role: data.role });
+  }
 }

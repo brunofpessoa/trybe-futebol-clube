@@ -13,3 +13,5 @@ export const userIncorrectMock = {
   email: 'k1czAO@k1czAO.com',
   password: 'giuwehgiuesuigseughsuiguishgigsieghusgi',
 };
+
+export const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6IkFkbWluIiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20ifSwiaWF0IjoxNjY5NDkwOTM3LCJleHAiOjE2Njk1NzczMzd9.294MvTLPBy4kjnNYm86wP0Mccr_S9weD2rsr4qmQ_rs';

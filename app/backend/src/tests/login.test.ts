@@ -7,7 +7,7 @@ import App from '../app';
 import Users from '../database/models/Users';
 
 import { Response } from 'superagent';
-import { userCorrectMock, userIncorrectMock } from './mocks';
+import { token, userCorrectMock, userIncorrectMock } from './mocks';
 import { validateToken } from '../helpers/jwt';
 
 chai.use(chaiHttp);
@@ -82,4 +82,29 @@ describe('Testes da rota /login', () => {
     expect(chaiHttpResponse.status).to.be.equal(401);
     expect(chaiHttpResponse.body).to.be.deep.equal({ "message": "Incorrect email or password" });
   });
+
+  it('Deve retornar status 200 e o role correto do usuário', async () => {
+    before(async () => {sinon.stub(Users, "findOne").resolves(userCorrectMock as Users);});
+    after(()=>{ sinon.restore(); });
+
+    chaiHttpResponse = await chai
+       .request(app).get('/login/validate').set('authorization', token)
+    expect(chaiHttpResponse.status).to.be.equal(200);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ role: 'admin' });
+  });
+
+  it('Deve retornar status 401 uma mensagem de token inválido em caso de token inexistente', async () => {
+    // Token inexistente
+    chaiHttpResponse = await chai
+       .request(app).get('/login/validate').set('authorization', '')
+    expect(chaiHttpResponse.status).to.be.equal(401);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Invalid token' });
+
+    // Token inválido
+    chaiHttpResponse = await chai
+       .request(app).get('/login/validate').set('authorization', 'this is an invalid token')
+    expect(chaiHttpResponse.status).to.be.equal(401);
+    expect(chaiHttpResponse.body).to.be.deep.equal({ message: 'Invalid token' });
+  });
+
 });

@@ -1,7 +1,7 @@
 import { isPasswordCompatible } from '../helpers/bcryptjs';
 import { ILogin, IToken } from '../interfaces';
 import Users from '../database/models/Users';
-import { createToken } from '../helpers/jwt';
+import { createToken, decodeJwt } from '../helpers/jwt';
 
 export default class LoginService {
   static async login(body: ILogin): Promise<IToken | undefined> {
@@ -19,11 +19,19 @@ export default class LoginService {
     const tokenBody = {
       id: user.id,
       username: user.username,
-      role: user.role,
       email: user.email,
     };
 
     const token = createToken(tokenBody);
     return { token };
+  }
+
+  static async validate(authorization: string) {
+    const jwtData = decodeJwt(authorization);
+    if (!jwtData) return { role: undefined };
+
+    const { data: { email } } = jwtData;
+    const user = await Users.findOne({ where: { email } });
+    return { role: user?.role };
   }
 }
