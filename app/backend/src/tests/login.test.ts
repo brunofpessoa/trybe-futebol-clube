@@ -7,7 +7,7 @@ import App from '../app';
 import Users from '../database/models/Users';
 
 import { Response } from 'superagent';
-import { token, userCorrectMock, userIncorrectMock } from './mocks';
+import { token, userCorrectMock, userIncorrectMock } from './loginMocks';
 import { validateToken } from '../helpers/jwt';
 
 chai.use(chaiHttp);
