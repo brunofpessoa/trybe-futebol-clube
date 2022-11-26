@@ -7,7 +7,7 @@ import App from '../app';
 import Users from '../database/models/Users';
 
 import { Response } from 'superagent';
-import { token, userCorrectMock, userIncorrectMock } from './loginMocks';
+import { token, userCorrectMock, userIncorrectMock } from './mocks/login';
 import { validateToken } from '../helpers/jwt';
 
 chai.use(chaiHttp);
@@ -17,11 +17,12 @@ const { app } = new App();
 const { expect } = chai;
 
 describe('Testes da rota /login', () => {
+  afterEach(()=>{ sinon.restore(); });
+
   let chaiHttpResponse: Response;
 
   it('Deve retornar status 200 ao ser acessado com credenciais válidas', async () => {
     before(async () => {sinon.stub(Users, "findOne").resolves(userCorrectMock as Users);});
-    after(()=>{ sinon.restore(); });
 
     chaiHttpResponse = await chai
        .request(app).post('/login').send({
@@ -35,7 +36,6 @@ describe('Testes da rota /login', () => {
 
   it('Deve retornar status 400 caso não haja o campo password', async () => {
     before(async () => {sinon.stub(Users, "findOne").resolves(userIncorrectMock as Users);});
-    after(()=>{ sinon.restore(); });
 
     chaiHttpResponse = await chai
        .request(app).post('/login').send({
@@ -47,7 +47,6 @@ describe('Testes da rota /login', () => {
 
   it('Deve retornar status 400 caso não haja o campo email', async () => {
     before(async () => {sinon.stub(Users, "findOne").resolves(userIncorrectMock as Users);});
-    after(()=>{ sinon.restore(); });
 
     chaiHttpResponse = await chai
        .request(app).post('/login').send({
@@ -59,7 +58,6 @@ describe('Testes da rota /login', () => {
 
   it('Deve retornar status 401 em caso de email inexistente', async () => {
     before(async () => {sinon.stub(Users, "findOne").resolves(userIncorrectMock as Users);});
-    after(()=>{ sinon.restore(); });
 
     chaiHttpResponse = await chai
        .request(app).post('/login').send({
@@ -72,7 +70,6 @@ describe('Testes da rota /login', () => {
 
   it('Deve retornar status 401 em caso de password incompatível', async () => {
     before(async () => {sinon.stub(Users, "findOne").resolves(userIncorrectMock as Users);});
-    after(()=>{ sinon.restore(); });
 
     chaiHttpResponse = await chai
        .request(app).post('/login').send({
@@ -85,7 +82,6 @@ describe('Testes da rota /login', () => {
 
   it('Deve retornar status 200 e o role correto do usuário', async () => {
     before(async () => {sinon.stub(Users, "findOne").resolves(userCorrectMock as Users);});
-    after(()=>{ sinon.restore(); });
 
     chaiHttpResponse = await chai
        .request(app).get('/login/validate').set('authorization', token)
