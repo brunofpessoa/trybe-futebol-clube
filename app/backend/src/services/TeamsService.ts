@@ -1,6 +1,6 @@
 import Teams from '../database/models/Teams';
 
-export default class LoginService {
+export default class TeamsService {
   static async getAll() {
     const teams = await Teams.findAll();
 
