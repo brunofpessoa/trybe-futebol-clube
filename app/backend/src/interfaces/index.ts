@@ -6,3 +6,10 @@ export interface ILogin {
 export interface IToken {
   token?: string,
 }
+
+export interface IMatch {
+  homeTeam: number
+  awayTeam: number
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+}
