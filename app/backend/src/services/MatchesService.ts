@@ -48,7 +48,6 @@ export default class MatchesService {
   static async update(id: string, homeTeamGoals: number, awayTeamGoals: number)
     : Promise<[affectedCount: number] | IRequestFail> {
     const idDb = await Matches.findOne({ where: { id } });
-
     if (!idDb) {
       return {
         httpStatus: httpStatus.notFound,
@@ -61,6 +60,21 @@ export default class MatchesService {
         homeTeamGoals,
         awayTeamGoals,
       },
+      { where: { id } },
+    );
+  }
+
+  static async finish(id: string) {
+    const idDb = await Matches.findOne({ where: { id } });
+    if (!idDb) {
+      return {
+        httpStatus: httpStatus.notFound,
+        message: 'There is no match with such id!',
+      };
+    }
+
+    return Matches.update(
+      { inProgress: 0 },
       { where: { id } },
     );
   }

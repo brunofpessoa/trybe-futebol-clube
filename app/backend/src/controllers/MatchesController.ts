@@ -51,4 +51,14 @@ export default class MatchesController {
 
     return res.status(httpStatus.success).json({ affectedCount: data });
   }
+
+  static async finish(req: Request, res: Response) {
+    const { id } = req.params;
+    const data = await MatchesService.finish(id);
+
+    if ('httpStatus' in data) {
+      return res.status(data.httpStatus).json({ message: data.message });
+    }
+    res.status(httpStatus.success).json({ message: 'Finished' });
+  }
 }
