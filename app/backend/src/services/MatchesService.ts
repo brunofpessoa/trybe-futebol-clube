@@ -44,4 +44,24 @@ export default class MatchesService {
 
     return Matches.create({ ...body, inProgress: 1 });
   }
+
+  static async update(id: string, homeTeamGoals: number, awayTeamGoals: number)
+    : Promise<[affectedCount: number] | IRequestFail> {
+    const idDb = await Matches.findOne({ where: { id } });
+
+    if (!idDb) {
+      return {
+        httpStatus: httpStatus.notFound,
+        message: 'There is no match with such id!',
+      };
+    }
+
+    return Matches.update(
+      {
+        homeTeamGoals,
+        awayTeamGoals,
+      },
+      { where: { id } },
+    );
+  }
 }

@@ -34,4 +34,21 @@ export default class MatchesController {
       return res.status(httpStatus.unauthorized).json({ message: 'Token must be a valid token' });
     }
   }
+
+  static async update(req: Request, res: Response) {
+    const { id } = req.params;
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+
+    if (!homeTeamGoals || !awayTeamGoals) {
+      return res.status(httpStatus.badRequest).json({ message: 'Fields are missing' });
+    }
+
+    const data = await MatchesService.update(id, homeTeamGoals, awayTeamGoals);
+
+    if ('httpStatus' in data) {
+      return res.status(data.httpStatus).json({ message: data.message });
+    }
+
+    return res.status(httpStatus.success).json({ affectedCount: data });
+  }
 }
