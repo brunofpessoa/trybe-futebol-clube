@@ -17,9 +17,7 @@ export default class MatchesController {
       return res.status(httpStatus.badRequest).json({ message: 'Missing token' });
     }
 
-    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals } = req.body;
-
-    if (!homeTeam || !awayTeam || !homeTeamGoals || !awayTeamGoals) {
+    if (!('homeTeam' && 'awayTeam' && 'homeTeamGoals' && 'awayTeamGoals' in req.body)) {
       return res.status(httpStatus.badRequest).json({ message: 'Fields are missing' });
     }
 

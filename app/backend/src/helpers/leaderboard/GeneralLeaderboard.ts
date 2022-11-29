@@ -16,7 +16,7 @@ export default class GeneralLeaderboard extends Leaderboard {
 
   setDrawMatches() {
     this._drawMatches = this._playedMatches.filter((match) => (
-      match.homeTeam === this.teamID && match.homeTeamGoals === match.awayTeamGoals
+      match.homeTeamGoals === match.awayTeamGoals
     )).length;
   }
 
