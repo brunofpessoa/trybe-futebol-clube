@@ -7,7 +7,16 @@ import App from '../app';
 import Matches from '../database/models/Matches';
 
 import { Response } from 'superagent';
-import { allMatchesMock, finishedMatchesMock, inProgressMatchesMock, oneMatchMock } from './mocks/matches';
+import {
+  allMatchesMock,
+  createdMatchMock,
+  finishedMatchesMock,
+  inProgressMatchesMock,
+  oneMatchMock,
+  teamMock,
+  token
+} from './mocks/matches';
+import Teams from '../database/models/Teams';
 
 chai.use(chaiHttp);
 
@@ -104,5 +113,77 @@ describe('Testes da rota PATCH /matches/:id', () => {
     expect(chaiHttpResponse.status).to.be.equal(200);
     expect(chaiHttpResponse.body)
       .to.be.deep.equal({"affectedCount": [1]});
+  });
+});
+
+describe('Testes da rota POST /matches', () => {
+  afterEach(()=>{ sinon.restore(); });
+
+  let chaiHttpResponse: Response;
+
+  const validBody = {
+    homeTeam: 1,
+    awayTeam: 2,
+    homeTeamGoals: 1,
+    awayTeamGoals: 0,
+  };
+
+  const invalidBody = {
+    homeTeam: 1,
+    awayTeam: 1,
+    homeTeamGoals: 1,
+    awayTeamGoals: 0,
+  }
+
+  it('Deve retornar status 400 e mensagem de token ausente', async () => {
+    chaiHttpResponse = await chai.request(app).post('/matches');
+    expect(chaiHttpResponse.status).to.be.equal(400);
+    expect(chaiHttpResponse.body)
+      .to.be.deep.equal({ message: 'Missing token' });
+  });
+
+  it('Deve retornar status 400 e mensagem de campos inválidos', async () => {
+    chaiHttpResponse = await chai.request(app).post('/matches').set('authorization', token);
+    expect(chaiHttpResponse.status).to.be.equal(400);
+    expect(chaiHttpResponse.body)
+      .to.be.deep.equal({ message: 'Fields are missing' });
+  });
+
+  it('Deve retornar status 401 e mensagem de token inválido', async () => {
+    chaiHttpResponse = await chai.request(app)
+      .post('/matches').set('authorization', 'invalid').send(validBody);
+    expect(chaiHttpResponse.status).to.be.equal(401);
+    expect(chaiHttpResponse.body)
+      .to.be.deep.equal({ message: 'Token must be a valid token' });
+  });
+
+  it('Deve retornar status 422 e mensagem de times iguais', async () => {
+    chaiHttpResponse = await chai.request(app)
+      .post('/matches').set('authorization', token).send(invalidBody);
+    expect(chaiHttpResponse.status).to.be.equal(422);
+    expect(chaiHttpResponse.body).to.be.deep.equal({
+      message: 'It is not possible to create a match with two equal teams'
+    });
+  });
+
+  it('Deve retornar status 404 e mensagem de ID inválido', async () => {
+    sinon.stub(Teams, "findOne").resolves(null);
+
+    chaiHttpResponse = await chai.request(app)
+      .post('/matches').set('authorization', token).send(validBody);
+    expect(chaiHttpResponse.status).to.be.equal(404);
+    expect(chaiHttpResponse.body).to.be.deep.equal({
+      message: 'There is no team with such id!'
+    });
+  });
+
+  it('Deve retornar status 201 e o time criado', async () => {
+    sinon.stub(Teams, "findOne").resolves(teamMock as Teams);
+    sinon.stub(Matches, "create").resolves(createdMatchMock as Matches);
+
+    chaiHttpResponse = await chai.request(app)
+      .post('/matches').set('authorization', token).send(validBody);
+    expect(chaiHttpResponse.status).to.be.equal(201);
+    expect(chaiHttpResponse.body).to.be.deep.equal(createdMatchMock);
   });
 });
