@@ -47,8 +47,8 @@ export default class MatchesService {
 
   static async update(id: string, homeTeamGoals: number, awayTeamGoals: number)
     : Promise<[affectedCount: number] | IRequestFail> {
-    const idDb = await Matches.findOne({ where: { id } });
-    if (!idDb) {
+    const match = await Matches.findOne({ where: { id } });
+    if (!match) {
       return {
         httpStatus: httpStatus.notFound,
         message: 'There is no match with such id!',
