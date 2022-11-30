@@ -1,4 +1,4 @@
-# Projeto Trybe Futebol Clube
+# Projeto Trybe Futebol Clube ⚽
 
 🔗 [Clique aqui e veja este projeto em execução](https://trybe-futebol-clube-dev.vercel.app/)
 
