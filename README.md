@@ -116,17 +116,17 @@ Siga os passos a seguir para ter a aplicação rodando em sua máquina.
   ```sh
     npm run postinstall
   ```
-3. Criando e populando o banco de dados
+3. Subindo os containers e inicializando os serviços
+Em um novo terminal execute:
+  ```sh
+    npm run compose:up:dev
+  ```
+4. Criando e populando o banco de dados
   ```sh
     docker exec -it app_backend bash
   ```
   ```sh
     npm run db:reset
-  ```
-4. Subindo os containers e inicializando os serviços
-Em um novo terminal execute:
-  ```sh
-    npm run compose:up:dev
   ```
 5. Pronto!
 O frontend está rodando localmente na porta 3000 e o backend na porta 3001
