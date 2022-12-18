@@ -6,6 +6,8 @@
   "scripts": {
     "postinstall": "npm run install:apps",
     "install:apps": "./apps_install.sh",
+    "postinstall:backend": "npm run install:apps:backend",
+    "install:apps:backend": "./apps_install_backend.sh",
     "pretest": "(cd ./app/backend && /bin/sh tsc_eval.sh)",
     "test": "env $(cat ./app/backend/.env) jest -i --forceExit --verbose",
     "test:browser": "SHOW_BROWSER=true npm test",
@@ -14,6 +16,8 @@
     "compose:down": "cd app && docker-compose down --remove-orphans",
     "compose:up:dev": "cd app && docker-compose -f docker-compose.dev.yml up --build",
     "compose:down:dev": "cd app && docker-compose -f docker-compose.dev.yml down --remove-orphans",
+    "compose:up:backend": "cd app && docker-compose -f docker-compose.backend.yml up --build",
+    "compose:down:backend": "cd app && docker-compose -f docker-compose.backend.yml down --remove-orphans",
     "logs": "cd app && docker-compose logs -f"
   },
   "author": "Trybe",
